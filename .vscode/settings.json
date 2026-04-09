@@ -1,0 +1,14 @@
+{
+  // oxfmt: 저장 시 자동 포매팅
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+
+  // oxlint: 저장 시 자동 lint fix
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "always"
+  },
+
+  // oxc 확장 설정
+  "oxc.lint.enable": true,
+  "oxc.format.enable": true
+}
