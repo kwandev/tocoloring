@@ -43,3 +43,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# private docs
+docs/business.md
+docs/roadmap/phase4.md
