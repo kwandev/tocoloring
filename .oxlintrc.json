@@ -31,7 +31,9 @@
     "nextjs/no-unwanted-polyfillio": "warn",
 
     "react/react-in-jsx-scope": "off",
+    "react/jsx-max-depth": "off",
     "react/jsx-no-target-blank": "off",
+    "react/jsx-props-no-spreading": "off",
 
     "jsx-a11y/alt-text": "warn",
     "jsx-a11y/aria-props": "warn",
@@ -71,8 +73,7 @@
     "typescript/parameter-properties": "off",
     "init-declarations": "off",
     "max-statements": "off",
-    "import/no-nodejs-modules": "off",
-    "react/jsx-max-depth": "off"
+    "import/no-nodejs-modules": "off"
   },
   "ignorePatterns": [".next/**", "out/**", "build/**", "node_modules/**"]
 }
