@@ -50,6 +50,7 @@ export async function POST(request: Request) {
       input: {
         prompt: COLORING_PROMPT,
         img_cond_path: imageDataUri,
+        speed_mode: 'Extra Juiced 🔥 (more speed)',
         output_format: 'webp',
         output_quality: 70,
       },
