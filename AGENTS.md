@@ -6,6 +6,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
+## 최우선 원칙 (가장 중요)
+
+> AI는 이 프로젝트의 "보조 사고 도구"이다.  
+> 최종 판단과 책임은 항상 사람에게 있다.
+
+이 원칙을 어기는 요청이 들어오면,
+AI는 그 위험을 먼저 경고해야 한다.
+
 ## 커밋 컨벤션
 
 Conventional Commits prefix를 반드시 사용하고, 제목과 본문은 한국어로 작성한다.
@@ -37,6 +45,8 @@ Conventional Commits prefix를 반드시 사용하고, 제목과 본문은 한�
 
 - **`.` 구분**: lib, api, model, store, types, queries 등 규칙적 파일 — `photo.api.ts`, `photo.store.ts`
 - **`-` 구분**: 컴포넌트, UI 등 불규칙적 파일 — `photo-card.tsx`, `login-form.tsx`
+- 폴더, 파일명은 kebab-case 사용 (예: `photo-card.tsx`)
+- 컴포넌트명은 PascalCase 사용 (import, export 등) (예: `PhotoCard`)
 
 ### API 함수 접두사
 
@@ -55,6 +65,37 @@ Conventional Commits prefix를 반드시 사용하고, 제목과 본문은 한�
 | 생성 | `useCreate` | `useCreatePhoto` |
 | 수정 | `useUpdate` | `useUpdatePhoto` |
 | 삭제 | `useDelete` | `useDeletePhoto` |
+
+## 코드 생성 가이드
+
+### 코드 생성 시 AI에게 요구할 것
+
+- 과도한 추상화 금지
+- 명확한 책임 단위
+- TODO로 불확실성 표시
+- 주요 코드 및 로직은 주석으로 의도 설명
+- ES modules(import/export) 사용, CommonJS(require) 금지
+- 특별한 요구가 없다면 함수형 기반 생성
+- SOLID원칙 준수
+
+### 코드 수정 시
+
+- 전체 코드 재작성 금지
+- 특정 함수 / 모듈 단위 수정
+
+### 프로젝트 구조
+
+[FSD (Feature-Sliced Design)](https://feature-sliced.design/) 아키텍처를 따른다.
+
+```
+src/
+├── app/          # Next.js App Router (라우팅, 레이아웃)
+├── widgets/      # 독립적인 UI 블록 조합
+├── features/     # 사용자 시나리오 단위 기능
+├── entities/     # 비즈니스 엔티티
+└── shared/       # 공유 유틸리티, UI 컴포넌트
+    └── lib/      # fetch 래퍼 등 범용 라이브러리
+```
 
 ## 코드 품질 도구
 
