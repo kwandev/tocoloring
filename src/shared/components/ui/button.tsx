@@ -42,11 +42,15 @@ function Button({
   className,
   variant = 'default',
   size = 'default',
+  render,
   ...props
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
   return (
     <ButtonPrimitive
       data-slot="button"
+      // render로 비-button 요소(<Link> 등)를 렌더링할 때 nativeButton을 비활성화한다
+      nativeButton={render == null}
+      render={render}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />

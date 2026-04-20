@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { QueryProvider } from '@/shared/providers';
+import { NavBar } from '@/widgets/nav-bar';
 import './globals.css';
 import { cn } from '@/shared/lib/utils';
 
@@ -24,7 +25,10 @@ export default function RootLayout({
   return (
     <html lang="ko" className={cn('h-full', 'antialiased', pretendard.variable, 'font-sans')}>
       <body className="flex min-h-full flex-col">
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <NavBar />
+          <main className="">{children}</main>
+        </QueryProvider>
       </body>
     </html>
   );

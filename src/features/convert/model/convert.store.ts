@@ -8,6 +8,11 @@ interface ConvertState {
   results: ColoringResult[];
   isConverting: boolean;
   error: string | null;
+  showSaveModal: boolean;
+  /** 변환 시작 시각 (소요 시간 계산용) */
+  conversionStartedAt: number | null;
+  /** 마지막 변환 소요 시간 (ms) */
+  conversionDurationMs: number | null;
 }
 
 interface ConvertActions {
@@ -16,6 +21,7 @@ interface ConvertActions {
   addResult: (result: ColoringResult) => void;
   setConverting: (isConverting: boolean) => void;
   setError: (error: string | null) => void;
+  toggleSaveModal: () => void;
   reset: () => void;
 }
 
@@ -25,6 +31,9 @@ const initialState: ConvertState = {
   results: [],
   isConverting: false,
   error: null,
+  showSaveModal: false,
+  conversionStartedAt: null,
+  conversionDurationMs: null,
 };
 
 export const useConvertStore = create<ConvertState & ConvertActions>()((set, get) => ({
@@ -32,28 +41,42 @@ export const useConvertStore = create<ConvertState & ConvertActions>()((set, get
 
   setUploadedFile: (file, previewUri) => {
     const currentName = get().uploadedFileName;
-    // 다른 이미지를 업로드하면 상태 초기화 (이름+크기로 비교)
     const fileIdentity = `${file.name}:${file.size}`;
     const isSameFile = currentName === fileIdentity;
     if (currentName && !isSameFile) {
-      set({ ...initialState, uploadedFileName: fileIdentity, previewUri });
+      set({
+        ...initialState,
+        uploadedFileName: fileIdentity,
+        previewUri,
+      });
       return;
     }
     set({ uploadedFileName: fileIdentity, previewUri, error: null });
   },
 
   addResult: (result) => {
-    const { results } = get();
+    const { results, conversionStartedAt } = get();
+    const durationMs = conversionStartedAt ? Date.now() - conversionStartedAt : null;
     set({
       results: [...results, result],
       isConverting: false,
       error: null,
+      conversionDurationMs: durationMs,
+      conversionStartedAt: null,
     });
   },
 
-  setConverting: (isConverting) => set({ isConverting, error: null }),
+  setConverting: (isConverting) => {
+    if (isConverting) {
+      set({ isConverting: true, error: null, conversionStartedAt: Date.now() });
+    } else {
+      set({ isConverting: false });
+    }
+  },
 
   setError: (error) => set({ error, isConverting: false }),
+
+  toggleSaveModal: () => set((s) => ({ showSaveModal: !s.showSaveModal })),
 
   reset: () => set(initialState),
 }));
