@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useConvertStore } from '@/features/convert';
 import { ResultScreen } from '@/widgets/result-screen';
-import { SaveModal } from '@/widgets/save-modal';
 
 export default function ResultPage() {
   const results = useConvertStore((s) => s.results);
@@ -21,10 +20,5 @@ export default function ResultPage() {
     return null;
   }
 
-  return (
-    <>
-      <ResultScreen />
-      <SaveModal />
-    </>
-  );
+  return <ResultScreen />;
 }

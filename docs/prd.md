@@ -12,36 +12,33 @@
 
 ## 핵심 사용자 플로우
 
-1. 이미지 업로드 (원본 A)
-2. AI가 색칠공부 도안으로 변환 → 결과 B 생성 (다운로드 가능)
-3. 같은 원본 A로 재변환 → 결과 C 추가 (재변환 1회)
-4. 같은 원본 A로 재변환 → 결과 D 추가 (재변환 2회, 최종)
-5. 결과 B, C, D 모두 다운로드 가능 (1회성, 재다운로드 불가)
+1. 홈(/) — 서비스 소개, CTA
+2. 이미지 업로드(/convert) — 원본 이미지 선택
+3. AI 변환 — 로딩 화면 표시 (평균 5초)
+4. 결과 확인(/result) — Before/After 비교, 다운로드(webp)
+5. 같은 원본으로 재변환 가능 (최대 2회)
 
 ---
 
 ## 페이즈 구성
 
-### Phase 1 — MVP (포트폴리오 수준)
+### Phase 1 — MVP (현재)
 
+- 홈/랜딩 페이지 (서비스 소개, CTA)
 - 이미지 업로드 UI (최대 2MB, jpg/png/webp)
-- AI 모델을 통한 도안 변환
-- 변환 결과 미리보기 및 다운로드
-- 비로그인 상태에서도 사용 가능 (IP 기반 무료 2회)
+- AI 모델을 통한 도안 변환 (결과 포맷: webp)
+- Before/After 비교 슬라이더
+- 변환 결과 webp 다운로드
+- 라우트: `/` (홈), `/convert` (업로드+로딩), `/result` (결과)
 
-### Phase 2 — 랜딩페이지
+### Phase 2 — 계정 연결
 
-- 1페이지 구성의 랜딩페이지
-- 서비스 소개, CTA
 - 로그인 기능 (BetterAuth, Google 로그인만 제공)
-
-### Phase 3 — 계정 연결
-
 - 회원가입/로그인 연동
 - 크레딧 잔액 관리
 - 크레딧 충전/사용 이력 조회
 
-### Phase 4 — 결제 모듈
+### Phase 3 — 결제 모듈
 
 - 토스페이먼츠 연동
 - 크레딧 충전 (패키지 구성)
@@ -53,19 +50,21 @@
 
 | 영역       | 기술                                    |
 | ---------- | --------------------------------------- |
-| 프레임워크 | Next.js (풀스택)                        |
+| 프레임워크 | Next.js 16 (풀스택, App Router)         |
 | AI 모델    | Replicate — `prunaai/flux-kontext-fast` |
-| DB         | Supabase                                |
-| 인증       | BetterAuth (Google 로그인)              |
-| 결제       | 토스페이먼츠                            |
+| 상태관리   | Zustand                                 |
+| 스타일     | Tailwind CSS 4, shadcn/ui               |
+| DB         | Supabase (Phase 2~)                     |
+| 인증       | BetterAuth (Phase 2~)                   |
+| 결제       | 토스페이먼츠 (Phase 3)                  |
 | 배포       | Vercel                                  |
 
 ### AI 모델 관련
 
-- 초기에는 Replicate 유료 API(`prunaai/flux-kontext-fast`)로 빠르게 구현
-- 이후 비용 절감을 위해 무료/자체 호스팅 방안 탐색
-- 변환 결과는 AI 응답을 그대로 클라이언트에 전달, 서버 저장 없음
-- 프롬프트 튜닝 전략 — 구현 중 진행
+- Replicate 유료 API(`prunaai/flux-kontext-fast`)로 구현
+- 출력 포맷: webp (output_format: 'webp', output_quality: 70)
+- 변환 결과는 서버에서 base64 data URI로 변환하여 클라이언트에 전달, 서버 저장 없음
+- 비동기 폴링 아키텍처 사용 (Vercel Hobby 10초 타임아웃 대응)
 
 ### 이미지 업로드
 

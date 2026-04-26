@@ -27,7 +27,7 @@ export function LoadingScreen() {
       <div className="bg-muted mt-3 h-1.5 w-[200px] overflow-hidden rounded-full">
         <div className="progress-fill bg-primary h-full rounded-full" />
       </div>
-      <div className="text-muted-foreground mt-2 text-xs">평균 2–3초 소요</div>
+      <div className="text-muted-foreground mt-2 text-xs">평균 5초 소요</div>
     </div>
   );
 }
