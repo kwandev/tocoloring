@@ -13,7 +13,7 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'toColoring — AI 색칠공부 도안 변환',
+  title: 'ToColoring — AI 색칠공부 도안 변환',
   description: '이미지를 업로드하면 AI가 색칠공부 도안으로 변환해드립니다.',
 };
 

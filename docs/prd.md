@@ -1,4 +1,4 @@
-# PRD — toColoring
+# PRD — ToColoring
 
 ## 개요
 
