@@ -1,22 +1,35 @@
-# Next.js Boilerplate
+# ToColoring
 
-Next.js 16 + React 19 기반 보일러플레이트 프로젝트.
+이미지를 업로드하면 AI가 색칠공부 도안(라인 아트)으로 변환해주는 웹 서비스.
 
 ## 기술 스택
 
-| 카테고리      | 도구                           |
-| ------------- | ------------------------------ |
-| Node.js       | 24.14.1 (LTS)                  |
-| 프레임워크    | Next.js 16, React 19           |
-| 언어          | TypeScript                     |
-| 스타일링      | Tailwind CSS v4                |
-| 폰트          | Pretendard (Variable)          |
-| 린터          | oxlint                         |
-| 포매터        | oxfmt                          |
-| 단위 테스트   | Vitest + React Testing Library |
-| E2E 테스트    | Playwright                     |
-| Git 훅        | husky + lint-staged            |
-| 패키지 매니저 | pnpm                           |
+| 카테고리      | 도구                                    |
+| ------------- | --------------------------------------- |
+| Node.js       | 24.14.1 (LTS)                           |
+| 프레임워크    | Next.js 16, React 19                    |
+| 언어          | TypeScript                              |
+| 스타일링      | Tailwind CSS v4, shadcn/ui              |
+| 상태관리      | Zustand                                 |
+| AI 모델       | Replicate (`prunaai/flux-kontext-fast`) |
+| 아이콘        | HugeIcons (`@hugeicons/react`)          |
+| 폰트          | Pretendard (Variable)                   |
+| 린터          | oxlint                                  |
+| 포매터        | oxfmt                                   |
+| 단위 테스트   | Vitest + React Testing Library          |
+| E2E 테스트    | Playwright                              |
+| Git 훅        | husky + lint-staged                     |
+| 패키지 매니저 | pnpm                                    |
+
+## 라우트 구조
+
+| 경로                | 설명                                    |
+| ------------------- | --------------------------------------- |
+| `/`                 | 홈 — 서비스 소개, CTA                   |
+| `/convert`          | 업로드 + 로딩 — 이미지 선택 후 AI 변환  |
+| `/result`           | 결과 — Before/After 비교, webp 다운로드 |
+| `/api/convert`      | POST — Replicate prediction 생성        |
+| `/api/convert/[id]` | GET — prediction 상태 폴링              |
 
 ## 프로젝트 구조
 
@@ -24,22 +37,41 @@ Next.js 16 + React 19 기반 보일러플레이트 프로젝트.
 
 ```
 src/
-├── app/          # Next.js App Router (라우팅, 레이아웃)
-├── widgets/      # 독립적인 UI 블록 조합
-├── features/     # 사용자 시나리오 단위 기능
-├── entities/     # 비즈니스 엔티티
-└── shared/       # 공유 유틸리티, UI 컴포넌트
-    └── lib/      # fetch 래퍼 등 범용 라이브러리
+├── app/                    # Next.js App Router (라우팅, 레이아웃)
+│   ├── convert/            # /convert 페이지
+│   ├── result/             # /result 페이지
+│   └── api/convert/        # 변환 API 라우트
+├── widgets/                # 독립적인 UI 블록 조합
+│   ├── home-screen/        # 홈 화면
+│   ├── upload-screen/      # 업로드 화면
+│   ├── loading-screen/     # 로딩 화면 (토끼 SVG 애니메이션)
+│   ├── result-screen/      # 결과 화면 (Before/After 슬라이더)
+│   └── nav-bar/            # 네비게이션 바
+├── features/               # 사용자 시나리오 단위 기능
+│   └── convert/            # 이미지 변환 기능 (스토어, 훅, API)
+├── entities/               # 비즈니스 엔티티
+│   └── coloring/           # 색칠 도안 타입
+└── shared/                 # 공유 유틸리티, UI 컴포넌트
+    ├── components/ui/      # Button, Badge, Card, Dialog 등
+    ├── lib/                # fetch 래퍼, 파일 유틸리티
+    └── providers/          # QueryProvider
 ```
 
 ## 시작하기
 
 ```bash
 pnpm install
+cp .env.example .env       # REPLICATE_API_TOKEN 설정
 pnpm dev
 ```
 
 http://localhost:3000 에서 확인.
+
+### 환경 변수
+
+| 변수                  | 설명               |
+| --------------------- | ------------------ |
+| `REPLICATE_API_TOKEN` | Replicate API 토큰 |
 
 ## 스크립트
 

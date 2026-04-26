@@ -34,6 +34,7 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-primary-soft: var(--primary-soft);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -55,8 +56,9 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.852 0.199 91.936);
-  --primary-foreground: oklch(0.421 0.095 57.708);
+  --primary: oklch(0.72 0.18 30);
+  --primary-foreground: oklch(1 0 0);
+  --primary-soft: color-mix(in oklch, oklch(0.72 0.18 30) 18%, white);
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
   --muted: oklch(0.97 0 0);
@@ -90,8 +92,8 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.795 0.184 86.047);
-  --primary-foreground: oklch(0.421 0.095 57.708);
+  --primary: oklch(0.78 0.16 30);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -126,5 +128,50 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* 로딩 화면: 토끼 SVG 선 그리기 애니메이션 */
+.draw-path {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: draw 2.4s ease-out forwards;
+}
+.draw-path.d1 {
+  animation-delay: 0s;
+}
+.draw-path.d2 {
+  animation-delay: 0.2s;
+}
+.draw-path.d3 {
+  animation-delay: 0.4s;
+}
+.draw-path.d4 {
+  animation-delay: 0.6s;
+}
+.draw-path.d5 {
+  animation-delay: 0.8s;
+}
+.draw-path.d6 {
+  animation-delay: 1s;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 로딩 화면: 프로그레스 바 채우기 애니메이션 */
+.progress-fill {
+  animation: fill-bar 2.6s linear forwards;
+}
+
+@keyframes fill-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
   }
 }
