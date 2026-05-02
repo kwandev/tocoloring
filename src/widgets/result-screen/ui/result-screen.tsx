@@ -4,7 +4,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { Tick01Icon } from '@hugeicons/core-free-icons';
 import { Badge } from '@/shared/components/ui/badge';
 import { useConvertStore } from '@/features/convert';
-import { BeforeAfterSlider } from './before-after-slider';
+import { BeforeAfterSlider } from '@/shared/components/before-after-slider';
 import { EditToolsCard } from './edit-tools-card';
 
 export function ResultScreen() {
