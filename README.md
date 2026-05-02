@@ -44,7 +44,7 @@ src/
 ├── widgets/                # 독립적인 UI 블록 조합
 │   ├── home-screen/        # 홈 화면 (히어로 / 사용 방법 / 예시 / 페르소나 섹션)
 │   ├── upload-screen/      # 업로드 화면
-│   ├── loading-screen/     # 로딩 화면 (토끼 SVG 애니메이션)
+│   ├── loading-screen/     # 로딩 화면 (spinner + 실시간 progress)
 │   ├── result-screen/      # 결과 화면
 │   └── nav-bar/            # 네비게이션 바
 ├── features/               # 사용자 시나리오 단위 기능
