@@ -42,17 +42,19 @@ src/
 │   ├── result/             # /result 페이지
 │   └── api/convert/        # 변환 API 라우트
 ├── widgets/                # 독립적인 UI 블록 조합
-│   ├── home-screen/        # 홈 화면
+│   ├── home-screen/        # 홈 화면 (히어로 / 사용 방법 / 예시 / 페르소나 섹션)
 │   ├── upload-screen/      # 업로드 화면
 │   ├── loading-screen/     # 로딩 화면 (토끼 SVG 애니메이션)
-│   ├── result-screen/      # 결과 화면 (Before/After 슬라이더)
+│   ├── result-screen/      # 결과 화면
 │   └── nav-bar/            # 네비게이션 바
 ├── features/               # 사용자 시나리오 단위 기능
 │   └── convert/            # 이미지 변환 기능 (스토어, 훅, API)
 ├── entities/               # 비즈니스 엔티티
 │   └── coloring/           # 색칠 도안 타입
 └── shared/                 # 공유 유틸리티, UI 컴포넌트
-    ├── components/ui/      # Button, Badge, Card, Dialog 등
+    ├── components/             # 공용 컴포넌트
+    │   ├── before-after-slider.tsx  # Before/After 비교 슬라이더 (홈/결과 화면 공용)
+    │   └── ui/                 # Button, Badge, Card, Dialog 등 (shadcn 기반)
     ├── lib/                # fetch 래퍼, 파일 유틸리티
     └── providers/          # QueryProvider
 ```
