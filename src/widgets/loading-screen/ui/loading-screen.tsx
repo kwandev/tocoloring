@@ -1,33 +1,60 @@
 'use client';
 
-import { Card } from '@/shared/components/ui/card';
-import { RabbitSvg } from './rabbit-svg';
+import { useEffect, useState } from 'react';
+import { useConvertStore } from '@/features/convert';
+
+// τ=7s: 실측 평균 변환 시간(약 10초)에 ~76%까지 차도록 선택. cap 0.95로 100% 도달을 막아
+// 실제 완료(컴포넌트 unmount) 전에 진행률이 가짜로 100%를 알리지 않게 한다.
+const TIME_CONSTANT_SEC = 7;
+const PROGRESS_CAP = 0.95;
+const TICK_MS = 200;
+
+// 경과 시간대별 안내 멘트. 위에서부터 차례로 매칭한다.
+const STAGES: readonly { until: number; message: string }[] = [
+  { until: 3, message: '이미지를 분석하고 있어요' },
+  { until: 7, message: '선을 따고 있어요' },
+  { until: 12, message: '디테일을 다듬고 있어요' },
+  { until: Infinity, message: '거의 다 됐어요' },
+];
+
+function getStageMessage(elapsedSec: number): string {
+  return STAGES.find((s) => elapsedSec < s.until)?.message ?? '';
+}
 
 export function LoadingScreen() {
+  const startedAt = useConvertStore((s) => s.conversionStartedAt);
+  // 마운트 시점이 startedAt보다 늦은 경우(예: 변환 도중 화면 복귀)에도 첫 프레임부터
+  // 정확한 진행률을 보여주기 위해 lazy 초기값으로 즉시 경과 시간을 계산한다.
+  const [elapsedMs, setElapsedMs] = useState(() => (startedAt ? Date.now() - startedAt : 0));
+
+  useEffect(() => {
+    if (!startedAt) {
+      return;
+    }
+    const id = setInterval(() => {
+      setElapsedMs(Date.now() - startedAt);
+    }, TICK_MS);
+    return () => clearInterval(id);
+  }, [startedAt]);
+
+  const elapsedSec = elapsedMs / 1000;
+  const progress = Math.min(PROGRESS_CAP, 1 - Math.exp(-elapsedSec / TIME_CONSTANT_SEC));
+
   return (
     <div className="bg-background animate-in fade-in fixed inset-0 z-10 flex flex-col items-center justify-center duration-300">
-      <div className="text-muted-foreground mb-6 flex items-center gap-2 text-sm">
-        <span className="border-muted border-t-primary size-3 animate-spin rounded-full border-2" />
-        AI가 선을 추출하고 있어요 · 곧 완성됩니다
-      </div>
+      <span className="border-muted border-t-primary mb-6 size-12 animate-spin rounded-full border-[3px]" />
 
-      <Card className="relative flex size-[320px] items-center justify-center overflow-hidden p-6">
+      <div className="text-foreground mb-1 text-base font-medium">
+        {getStageMessage(elapsedSec)}
+      </div>
+      <div className="text-muted-foreground mb-5 text-sm">잠시만 기다려주세요 · 평균 10초 소요</div>
+
+      <div className="bg-muted h-1.5 w-[240px] overflow-hidden rounded-full">
         <div
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            background: 'radial-gradient(circle at 50% 45%, #ffcdbd 0, #ff9b7b 60%, #e06a45 100%)',
-          }}
+          className="bg-primary h-full rounded-full transition-[width] duration-200 ease-out"
+          style={{ width: `${(progress * 100).toFixed(2)}%` }}
         />
-        <div className="text-foreground relative size-full">
-          <RabbitSvg stroke={2.2} animated />
-        </div>
-      </Card>
-
-      <div className="text-primary mt-6 text-sm font-medium">그리는 중...</div>
-      <div className="bg-muted mt-3 h-1.5 w-[200px] overflow-hidden rounded-full">
-        <div className="progress-fill bg-primary h-full rounded-full" />
       </div>
-      <div className="text-muted-foreground mt-2 text-xs">평균 5초 소요</div>
     </div>
   );
 }

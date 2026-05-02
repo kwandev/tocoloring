@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { HorizontalResizeIcon } from '@hugeicons/core-free-icons';
 import { Badge } from '@/shared/components/ui/badge';
@@ -11,39 +11,31 @@ interface BeforeAfterSliderProps {
   className?: string;
 }
 
-/**
- * Before/After 비교 슬라이더
- *
- * 포인터 이벤트 리스너는 드래그 중에만 window에 등록하여 불필요한 이벤트 처리를 방지한다.
- */
 export function BeforeAfterSlider({ beforeSrc, afterSrc, className = '' }: BeforeAfterSliderProps) {
   const [pos, setPos] = useState(50);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const updatePos = useCallback((clientX: number) => {
+  const updatePos = (clientX: number) => {
     const r = containerRef.current?.getBoundingClientRect();
     if (!r) {
       return;
     }
     const x = ((clientX - r.left) / r.width) * 100;
     setPos(Math.max(4, Math.min(96, x)));
-  }, []);
+  };
 
-  const handlePointerDown = useCallback(
-    (e: React.PointerEvent) => {
+  // setPointerCapture: 드래그가 컨테이너 밖으로 나가도 이벤트가 계속 들어오게 하면서,
+  // unmount 시 캡처가 자동 해제되어 window 리스너 누수가 발생하지 않는다.
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    updatePos(e.clientX);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
       updatePos(e.clientX);
-
-      const onMove = (ev: PointerEvent) => updatePos(ev.clientX);
-      const onUp = () => {
-        window.removeEventListener('pointermove', onMove);
-        window.removeEventListener('pointerup', onUp);
-      };
-
-      window.addEventListener('pointermove', onMove);
-      window.addEventListener('pointerup', onUp);
-    },
-    [updatePos],
-  );
+    }
+  };
 
   return (
     <div
@@ -51,6 +43,7 @@ export function BeforeAfterSlider({ beforeSrc, afterSrc, className = '' }: Befor
       className={`relative overflow-hidden rounded-lg select-none ${className}`}
       style={{ touchAction: 'none' }}
       onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- data URI 비교 뷰 */}
       <img src={beforeSrc} alt="원본" className="block size-full object-contain" />
