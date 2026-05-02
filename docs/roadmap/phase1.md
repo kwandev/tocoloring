@@ -22,9 +22,7 @@
 - [x] 결과 다운로드 버튼 (webp)
 - [x] 처음으로 / 다른 사진 버튼
 - [x] 결과 없을 시 `/convert` 자동 리다이렉트
-- [ ] 재변환 버튼 (잔여 횟수 표시, 최대 2회)
-  - 로직(`canReconvert`, `getRemainingReconvertCount`, `MAX_RECONVERT_COUNT=2`)은 `src/features/convert/`에 구현됨, UI 노출만 남음
-  - 재변환 시 슬라이더의 After 이미지만 교체 (결과 누적 표시는 하지 않음)
+- [x] 재변환 버튼 (잔여 횟수 표시, 최대 2회) — 슬라이더의 After 이미지만 최신 결과로 교체
 
 ## 에러 / 검증
 
