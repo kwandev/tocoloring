@@ -1,6 +1,24 @@
 import type { NextRequest } from 'next/server';
 import { replicate } from '@/shared/lib/replicate';
 
+// SSRF 방어: Replicate 응답값을 그대로 fetch하기 전 호스트를 화이트리스트로 제한
+const ALLOWED_OUTPUT_HOST_SUFFIX = '.replicate.delivery';
+const ALLOWED_OUTPUT_HOSTS = new Set(['replicate.delivery', 'replicate.com']);
+
+function isAllowedOutputUrl(value: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(value);
+  } catch {
+    return false;
+  }
+  if (parsed.protocol !== 'https:') {
+    return false;
+  }
+  const host = parsed.hostname;
+  return ALLOWED_OUTPUT_HOSTS.has(host) || host.endsWith(ALLOWED_OUTPUT_HOST_SUFFIX);
+}
+
 /**
  * GET /api/convert/[id]
  *
@@ -35,6 +53,15 @@ export async function GET(_req: NextRequest, ctx: RouteContext<'/api/convert/[id
     const imageUrl = Array.isArray(output) ? output[0] : output;
 
     if (!imageUrl || typeof imageUrl !== 'string') {
+      return Response.json({
+        status: 'failed',
+        error: '변환 결과를 가져올 수 없습니다.',
+      });
+    }
+
+    // Replicate 출력 URL이 신뢰할 수 있는 호스트인지 확인 (SSRF 방어)
+    if (!isAllowedOutputUrl(imageUrl)) {
+      console.error('허용되지 않은 출력 호스트:', imageUrl);
       return Response.json({
         status: 'failed',
         error: '변환 결과를 가져올 수 없습니다.',
